@@ -15,14 +15,14 @@ void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
   
-  forwardL = 11;
+  forwardL = 9;
   backwardL = 10;
 
-  forwardR = 3;
+  forwardR = 6;
   backwardR = 5;
 
-  flexL = A4;
-  flexR = A5;
+  //flexL = A4;
+  //flexR = A5;
 
   photoF = A0;
   photoL = A1;
@@ -46,14 +46,16 @@ void loop() {
   //analogWrite(backwardR,0);
   //analogWrite(forwardL,255);
   //analogWrite(backwardL,0);
+  
   //handleFlexL();
   //handleFlexR();
-  //handlePhoto();
-  movePhoto();
-  //test();
+  handlePhoto();
+  
+  //movePhoto();
+  testMove();
 
+  carMoveL(0,0);
   //carMoveR(255,0);
-  //carMoveL(255,0);
 }
 
 void handleFlexL()
@@ -101,26 +103,23 @@ void handlePhoto() //getting the photoresistor state and displaying it
   //Serial.println(scaled);
 }
 
-void test(){
+void testMove()
+{
   int photoStateF = analogRead(photoF);
   int photoStateL = analogRead(photoL);
   int photoStateR = analogRead(photoR);
   int photoStateB = analogRead(photoB);
 
-//  carMoveL(0, 0);
- // carMoveR(0, 0);
-  
-  if(photoStateR > 900)
+  if(photoStateF > 900)
   {
     carMoveL(255,0);
-    carMoveR(0,255);
+    carMoveR(255,0);
   }
   else
   {
     carMoveL(0,0);
     carMoveR(0,0);
   }
-  
 }
 
 void movePhoto()
@@ -129,10 +128,9 @@ void movePhoto()
   int photoStateL = analogRead(photoL);
   int photoStateR = analogRead(photoR);
   int photoStateB = analogRead(photoB);
-  
+
   if(photoStateF > 900)
   {
-    Serial.println("Moving forward");
     carMoveL(255,0);
     carMoveR(255,0);
   }
@@ -144,7 +142,6 @@ void movePhoto()
 
   if(photoStateL > 900)
   {
-    Serial.println("Moving left");
     carMoveL(0,255);
     carMoveR(255,0);
   }
@@ -156,7 +153,6 @@ void movePhoto()
 
   if(photoStateR > 900)
   {
-    Serial.println("Moving right");
     carMoveL(255,0);
     carMoveR(0,255);
   }
@@ -168,7 +164,6 @@ void movePhoto()
 
   if(photoStateB > 900)
   {
-    Serial.println("Moving back");
     carMoveL(0,255);
     carMoveR(0,255);
   }
