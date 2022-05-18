@@ -11,12 +11,18 @@ int photoB;
 int flexL;
 int flexR;
 
-void setup() {
+//DO NOT TOUCH THESE 3 VARIABLES
+const int SETUP_TIME = 5000;
+const int AUTONOMOUS_TIME = 15000;
+const int STOP_TIME = 2000;
+
+void setup() 
+{
   // put your setup code here, to run once:
   Serial.begin(9600);
   
-  forwardL = 9;
-  backwardL = 10;
+  forwardL = 10;
+  backwardL = 9;
 
   forwardR = 6;
   backwardR = 5;
@@ -39,23 +45,90 @@ void setup() {
   pinMode(forwardR,OUTPUT);
   pinMode(backwardR,OUTPUT);
 }
+//============================================================
+//DO NOT WRITE CODE IN THE LOOP METHOD.
+void loop() 
+{
+  //DO NOT TOUCH THIS CODE
+  long mil = millis();
+  if(mil<SETUP_TIME)
+  {
+    //LEAVE THIS BLANK
+  }
+  else if(mil<AUTONOMOUS_TIME+SETUP_TIME)
+  {
+    autonomousMode();
+  }
+  else if(mil<AUTONOMOUS_TIME+SETUP_TIME+STOP_TIME)
+  {
+    fullStop();
+  }
+  else
+  {
+    teleOpMode();
+  } 
+}
+//============================================================
 
-void loop() {
-  // put your main code here, to run repeatedly:
-  //analogWrite(forwardLR,255);
-  //analogWrite(backwardR,0);
-  //analogWrite(forwardL,255);
-  //analogWrite(backwardL,0);
-  
-  //handleFlexL();
-  //handleFlexR();
-  handlePhoto();
-  
-  //movePhoto();
-  testMove();
+//WRITE CODE IN HERE:  YOUR AUTONOMOUS CODE GOES IN HERE.  PART 1 OF RACE
+void autonomousMode()
+{
+  //WIP
+}
+//WRITE CODE IN HERE:  YOUR TELEOP CODE GOES IN HERE.  PART 2 OF RACE
+//you MUST write this method
+void teleOpMode()
+{
+  int photoStateF = analogRead(photoF);
+  int photoStateL = analogRead(photoL);
+  int photoStateR = analogRead(photoR);
+  int photoStateB = analogRead(photoB);
 
+  if(photoStateF > 900)
+  {
+    carMoveL(255,0);
+    carMoveR(255,0);
+  }
+  else if(photoStateL > 900)
+  {
+    carMoveL(0,255);
+    carMoveR(255,0);
+  }
+  else if(photoStateR > 900)
+  {
+    carMoveL(255,0);
+    carMoveR(0,255);
+  }
+  else if(photoStateB > 900)
+  {
+    carMoveL(0,255);
+    carMoveR(0,255);
+  }
+  else
+  {
+    carMoveL(0,0);
+    carMoveR(0,0);
+  }
+}
+//WRITE CODE IN HERE:  YOU SHOULD MAKE EVERY MOTOR STOP 
+//you MUST write this method
+void fullStop()
+{
   carMoveL(0,0);
-  //carMoveR(255,0);
+  carMoveR(0,0);
+}
+
+//Feel free to add more methods.
+void carMoveL(int forward,int backward)
+{
+  analogWrite(forwardL,forward);
+  analogWrite(backwardL,backward);
+
+}
+void carMoveR(int forward,int backward)
+{
+  analogWrite(forwardR,forward);
+  analogWrite(backwardR,backward);
 }
 
 void handleFlexL()
@@ -96,11 +169,6 @@ void handlePhoto() //getting the photoresistor state and displaying it
   Serial.print("photoStateB = ");
   Serial.println(photoStateB);
   Serial.print("|");
-
-  //Scaling the photoState to be between 0 and 255
-  //int scaled = map(photoState, 355, 960, 0, 255);
-  //Serial.print("scaled = ");
-  //Serial.println(scaled);
 }
 
 void testMove()
@@ -109,7 +177,6 @@ void testMove()
   int photoStateL = analogRead(photoL);
   int photoStateR = analogRead(photoR);
   int photoStateB = analogRead(photoB);
-
   if(photoStateF > 900)
   {
     carMoveL(255,0);
@@ -120,67 +187,4 @@ void testMove()
     carMoveL(0,0);
     carMoveR(0,0);
   }
-}
-
-void movePhoto()
-{
-  int photoStateF = analogRead(photoF);
-  int photoStateL = analogRead(photoL);
-  int photoStateR = analogRead(photoR);
-  int photoStateB = analogRead(photoB);
-
-  if(photoStateF > 900)
-  {
-    carMoveL(255,0);
-    carMoveR(255,0);
-  }
-  else
-  {
-    carMoveL(0,0);
-    carMoveR(0,0);
-  }
-
-  if(photoStateL > 900)
-  {
-    carMoveL(0,255);
-    carMoveR(255,0);
-  }
-  else
-  {
-    carMoveL(0,0);
-    carMoveR(0,0);
-  }
-
-  if(photoStateR > 900)
-  {
-    carMoveL(255,0);
-    carMoveR(0,255);
-  }
-  else
-  {
-    carMoveL(0,0);
-    carMoveR(0,0);
-  }
-
-  if(photoStateB > 900)
-  {
-    carMoveL(0,255);
-    carMoveR(0,255);
-  }
-  else
-  {
-    carMoveL(0,0);
-    carMoveR(0,0);
-  }
-}
-
-void carMoveL(int forward,int backward)
-{
-  analogWrite(forwardL,forward);
-  analogWrite(backwardL,backward);
-}
-void carMoveR(int forward,int backward)
-{
-  analogWrite(forwardR,forward);
-  analogWrite(backwardR,backward);
 }
